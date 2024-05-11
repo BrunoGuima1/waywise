@@ -1,50 +1,59 @@
 import 'package:flutter/material.dart';
 
-class SplashLogin extends StatefulWidget {
-  const SplashLogin({
+class MyTextFormField extends StatefulWidget {
+  const MyTextFormField({
     super.key,
-    required TextEditingController controller
-    }) : _controller = controller;
-  
+    required TextEditingController controller,
+    required Color fillColor,
+    required InputBorder border,
+    required String hintText,
+    required bool isPassword,
+  })  : _controller = controller,
+        _fillColor = fillColor,
+        _border = border,
+        _hintText = hintText,
+        _isPassword = isPassword;
+
   final TextEditingController _controller;
-  
+  final Color _fillColor;
+  final InputBorder _border;
+  final String _hintText;
+  final bool _isPassword;
+
   @override
-  State<SplashLogin> createState() => _SplashLoginState();
+  State<MyTextFormField> createState() => _MyTextFormFieldState();
 }
 
-class _SplashLoginState extends State<SplashLogin> {
+class _MyTextFormFieldState extends State<MyTextFormField> {
+  late bool _toObscure;
+
+  @override
+  void initState() {
+    super.initState();
+    _toObscure = true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(72, 163, 247, 1),
-       body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Digite seu Email',
-                ),
-              ),
-              const SizedBox(height: 20.0),
-              const TextField(
-                decoration: InputDecoration(
-                  hintText: 'Digite sua Senha',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 20.0),
-              ElevatedButton(
-                onPressed: () {
-                  // Adicione a lógica de autenticação aqui
-                },
-                child: const Text('Login'),
-              ),
-            ],
-          ),
-        ),
+    return TextField(
+      controller: widget._controller,
+      obscureText: _toObscure && widget._isPassword,
+      decoration: InputDecoration(
+        fillColor: widget._fillColor,
+        filled: true,
+        border: widget._border,
+        hintText: widget._hintText,
+        suffixIcon: widget._isPassword
+            ? IconButton(
+                onPressed: () => {
+                      setState(() {
+                        _toObscure = !_toObscure;
+                      })
+                    },
+                icon: _toObscure
+                    ? const Icon(Icons.visibility_outlined)
+                    : const Icon(Icons.visibility_off_outlined))
+            : null,
       ),
     );
   }
